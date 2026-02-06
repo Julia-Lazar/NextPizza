@@ -1,9 +1,5 @@
-import { redirect } from 'next/dist/server/api-utils';
-import React from 'react';
-import OrdersList from '@/components/OrdersList';
+import { redirect } from 'next/navigation';
 
-const AdminMainPage = () => {
-  return <OrdersList />;
-};
-
-export default AdminMainPage;
+export default function AdminMainPage() {
+  redirect('/admin/orders');
+}
