@@ -1,51 +1,51 @@
-"use client";
-import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
-import { useAddress } from "../../../context/AddressContext";
-import { FormInput } from "../../../components/FormInput";
-import { FormTextarea } from "../../../components/FormTextarea";
-import { z } from "zod";
+'use client';
+import { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { useAddress } from '../../../context/AddressContext';
+import { FormInput } from '../../../components/FormInput';
+import { FormTextarea } from '../../../components/FormTextarea';
+import { z } from 'zod';
 
 // 1. Define the Zod schema
 const addressSchema = z.object({
   firstName: z
     .string()
     .trim()
-    .min(2, "First name must be at least 2 characters")
-    .regex(/^[a-zA-Z\s\u00C0-\u017F]+$/, "First name can only contain letters"),
+    .min(2, 'First name must be at least 2 characters')
+    .regex(/^[a-zA-Z\s\u00C0-\u017F]+$/, 'First name can only contain letters'),
   lastName: z
     .string()
     .trim()
-    .min(2, "Last name must be at least 2 characters")
-    .regex(/^[a-zA-Z\s\u00C0-\u017F]+$/, "Last name can only contain letters"),
-  email: z.email("Please enter a valid email address").trim(),
+    .min(2, 'Last name must be at least 2 characters')
+    .regex(/^[a-zA-Z\s\u00C0-\u017F]+$/, 'Last name can only contain letters'),
+  email: z.email('Please enter a valid email address').trim(),
   phone: z
     .string()
     .trim()
-    .min(9, "Phone number must be at least 9 digits")
-    .max(15, "Phone number is too long")
+    .min(9, 'Phone number must be at least 9 digits')
+    .max(15, 'Phone number is too long')
     .regex(
       /^\D*(\d\D*){9,15}$/,
-      "Phone number must be between 9 and 15 digits"
+      'Phone number must be between 9 and 15 digits',
     ),
   street: z
     .string()
     .trim()
-    .min(5, "Street address must be at least 5 characters"),
+    .min(5, 'Street address must be at least 5 characters'),
   city: z
     .string()
     .trim()
-    .min(2, "City name must be at least 2 characters")
-    .regex(/^[a-zA-Z\s\u00C0-\u017F-]+$/, "City name can only contain letters"),
+    .min(2, 'City name must be at least 2 characters')
+    .regex(/^[a-zA-Z\s\u00C0-\u017F-]+$/, 'City name can only contain letters'),
   postalCode: z
     .string()
     .trim()
-    .min(3, "Postal code is too short")
-    .regex(/^[0-9A-Z\s-]+$/, "Please enter a valid postal code"),
+    .min(3, 'Postal code is too short')
+    .regex(/^[0-9A-Z\s-]+$/, 'Please enter a valid postal code'),
   country: z
     .string()
     .trim()
-    .min(2, "Country name must be at least 2 characters"),
+    .min(2, 'Country name must be at least 2 characters'),
   additionalInfo: z.string().trim().optional(),
 });
 
@@ -63,17 +63,17 @@ interface FormErrors {
 export default function AddressPage() {
   const router = useRouter();
   const { setAddressData } = useAddress();
-  const storageKey = "nextpizza.address.form";
+  const storageKey = 'nextpizza.address.form';
   const [formData, setFormData] = useState({
-    firstName: "",
-    lastName: "",
-    email: "",
-    phone: "",
-    street: "",
-    city: "",
-    postalCode: "",
-    country: "",
-    additionalInfo: "",
+    firstName: '',
+    lastName: '',
+    email: '',
+    phone: '',
+    street: '',
+    city: '',
+    postalCode: '',
+    country: '',
+    additionalInfo: '',
   });
 
   const [errors, setErrors] = useState<FormErrors>({});
@@ -81,12 +81,12 @@ export default function AddressPage() {
   const [hasLoadedFromStorage, setHasLoadedFromStorage] = useState(false);
 
   useEffect(() => {
-    if (typeof window === "undefined") return;
+    if (typeof window === 'undefined') return;
     try {
       const stored = window.localStorage.getItem(storageKey);
       if (stored) {
         const parsed = JSON.parse(stored);
-        if (parsed && typeof parsed === "object") {
+        if (parsed && typeof parsed === 'object') {
           setFormData((prev) => ({
             ...prev,
             ...parsed,
@@ -101,7 +101,7 @@ export default function AddressPage() {
   }, [storageKey]);
 
   useEffect(() => {
-    if (typeof window === "undefined") return;
+    if (typeof window === 'undefined') return;
     if (!hasLoadedFromStorage) return;
     try {
       window.localStorage.setItem(storageKey, JSON.stringify(formData));
@@ -125,10 +125,10 @@ export default function AddressPage() {
     let isValid = true;
 
     Object.keys(formData).forEach((key) => {
-      if (key !== "additionalInfo") {
+      if (key !== 'additionalInfo') {
         const error = validateField(
           key,
-          formData[key as keyof typeof formData]
+          formData[key as keyof typeof formData],
         );
         if (error) {
           newErrors[key as keyof FormErrors] = error;
@@ -142,7 +142,7 @@ export default function AddressPage() {
   };
 
   const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
@@ -161,7 +161,7 @@ export default function AddressPage() {
   };
 
   const handleBlur = (
-    e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>
+    e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
     const { name, value } = e.target;
     setTouched((prev) => ({
@@ -180,19 +180,22 @@ export default function AddressPage() {
     e.preventDefault();
 
     // Mark all fields as touched
-    const allTouched = Object.keys(formData).reduce((acc, key) => {
-      acc[key] = true;
-      return acc;
-    }, {} as { [key: string]: boolean });
+    const allTouched = Object.keys(formData).reduce(
+      (acc, key) => {
+        acc[key] = true;
+        return acc;
+      },
+      {} as { [key: string]: boolean },
+    );
     setTouched(allTouched);
 
     // Validate entire form
     if (validateForm()) {
       setAddressData(formData);
-      console.log("Form submitted:", formData);
-      router.push("/checkout");
+      console.log('Form submitted:', formData);
+      router.push('/checkout');
     } else {
-      console.log("Form has errors");
+      console.log('Form has errors');
     }
   };
 
@@ -276,7 +279,7 @@ export default function AddressPage() {
             required
           />
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <FormInput
               id="city"
               name="city"
@@ -301,7 +304,7 @@ export default function AddressPage() {
               required
             />
 
-            <FormInput
+            {/* <FormInput
               id="country"
               name="country"
               label="Country"
@@ -311,7 +314,7 @@ export default function AddressPage() {
               error={errors.country}
               touched={touched.country}
               required
-            />
+            /> */}
           </div>
 
           <FormTextarea
@@ -328,7 +331,7 @@ export default function AddressPage() {
         <button
           type="submit"
           className="w-full bg-orange-500 text-white py-3 px-6 rounded-md font-semibold hover:bg-orange-600 transition-colors"
-          style={{ cursor: "pointer" }}
+          style={{ cursor: 'pointer' }}
         >
           Continue to Checkout
         </button>
