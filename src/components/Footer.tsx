@@ -1,5 +1,5 @@
-import React from "react";
-import Contact from "./Contact";
+import React from 'react';
+import Contact from './Contact';
 
 export const Footer = () => {
   return (
@@ -7,7 +7,7 @@ export const Footer = () => {
       <div className="container mx-auto px-4 py-6">
         <Contact />
         <p className="text-center text-gray-700 font-medium mt-8">
-          © 2025 Pizza app by Julia Dmytrenko
+          © 2026 NextPizza app by Julia Lazar
         </p>
       </div>
     </footer>
