@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAddress } from "../../../context/AddressContext";
 import { FormInput } from "../../../components/FormInput";
@@ -63,6 +63,7 @@ interface FormErrors {
 export default function AddressPage() {
   const router = useRouter();
   const { setAddressData } = useAddress();
+  const storageKey = "nextpizza.address.form";
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
@@ -77,6 +78,37 @@ export default function AddressPage() {
 
   const [errors, setErrors] = useState<FormErrors>({});
   const [touched, setTouched] = useState<{ [key: string]: boolean }>({});
+  const [hasLoadedFromStorage, setHasLoadedFromStorage] = useState(false);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    try {
+      const stored = window.localStorage.getItem(storageKey);
+      if (stored) {
+        const parsed = JSON.parse(stored);
+        if (parsed && typeof parsed === "object") {
+          setFormData((prev) => ({
+            ...prev,
+            ...parsed,
+          }));
+        }
+      }
+    } catch {
+      // ignore malformed storage
+    } finally {
+      setHasLoadedFromStorage(true);
+    }
+  }, [storageKey]);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    if (!hasLoadedFromStorage) return;
+    try {
+      window.localStorage.setItem(storageKey, JSON.stringify(formData));
+    } catch {
+      // ignore storage write errors
+    }
+  }, [formData, hasLoadedFromStorage, storageKey]);
 
   const validateField = (name: string, value: string): string | undefined => {
     const partialData = { [name]: value };
