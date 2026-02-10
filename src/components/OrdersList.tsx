@@ -87,7 +87,7 @@ export default function OrdersList({ ordersFromDB }: any) {
                 filter === status
                   ? 'bg-orange-600 text-white'
                   : status === 'ALL'
-                    ? 'bg-gray-200 text-gray-700 hover:bg-gray-300 border-2 border-orange-300'
+                    ? 'bg-gray-200 text-gray-700 hover:bg-gray-300 border-2 border-orange-600'
                     : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
               }`}
             >
