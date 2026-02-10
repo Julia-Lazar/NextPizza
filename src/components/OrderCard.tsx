@@ -18,37 +18,11 @@ function getStatusColor(status: string) {
   }
 }
 
-export default function OrderCard({ order }: any) {
-  // const { updateOrderStatus, deleteOrder } = useOrders();
-  // const { deleteOrder } = useOrders();
-  console.log('Order in OrderCard:', order);
-  async function updateOrderStatus(orderId: number, newStatus: string) {
-    console.log('Updating order status:', orderId, newStatus);
-    const response = await fetch(`/api/orders/${orderId}`, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ status: newStatus }),
-    });
-    console.log('Update response status:', response.status);
-
-    if (!response.ok) {
-      throw new Error('Failed to update order status');
-    }
-
-    return await response.json();
-  }
-
-  async function deleteOrder(orderId: number) {
-    const response = await fetch(`/api/orders/${orderId}`, {
-      method: 'DELETE',
-    });
-    if (!response.ok) {
-      throw new Error('Failed to delete order');
-    }
-    // Optionally, refresh the orders list or update state here
-  }
+export default function OrderCard({
+  order,
+  updateOrderStatus,
+  deleteOrder,
+}: any) {
 
   return (
     <div className="border border-gray-200 rounded-lg p-4 hover:shadow-md transition">

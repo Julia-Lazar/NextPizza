@@ -1,41 +1,94 @@
 'use client';
-import { useOrders } from '../context/OrdersContext';
 import OrderCard from './OrderCard';
 import { useState, useEffect } from 'react';
 
 export default function OrdersList({ ordersFromDB }: any) {
-  const { orders, updateOrderStatus, deleteOrder } = useOrders();
   const [filter, setFilter] = useState<
-    'ALL' | 'PENDING' | 'PREPARING' | 'READY' | 'DELIVERED' | 'CANCELLED'
-  >('ALL');
+    'PENDING' | 'PREPARING' | 'READY' | 'DELIVERED' | 'CANCELLED' | 'ALL'
+  >('PENDING');
   const [loading, setLoading] = useState(
     !ordersFromDB || !Array.isArray(ordersFromDB),
+  );
+  const [localOrders, setLocalOrders] = useState<any[]>(
+    Array.isArray(ordersFromDB) ? ordersFromDB.filter(Boolean) : [],
   );
 
   useEffect(() => {
     if (ordersFromDB && Array.isArray(ordersFromDB)) {
       setLoading(false);
+      setLocalOrders(ordersFromDB.filter(Boolean));
     }
   }, [ordersFromDB]);
   const filteredOrders =
     filter === 'ALL'
-      ? ordersFromDB?.filter(
-          (o: any) => o.status !== 'DELIVERED' && o.status !== 'CANCELLED',
+      ? localOrders?.filter(
+          (o: any) => o && o.status !== 'DELIVERED' && o.status !== 'CANCELLED',
         )
-      : ordersFromDB?.filter((o: any) => o.status === filter);
+      : localOrders?.filter((o: any) => o && o.status === filter);
+
+  const updateOrderStatusRemote = async (
+    orderId: number,
+    newStatus: string,
+  ) => {
+    const response = await fetch(`/api/orders/${orderId}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ status: newStatus }),
+    });
+
+    if (!response.ok) {
+      const err = await response.json().catch(() => null);
+      throw new Error(err?.error || 'Failed to update order status');
+    }
+
+    return await response.json();
+  };
+
+  const deleteOrderRemote = async (orderId: number) => {
+    const response = await fetch(`/api/orders/${orderId}`, {
+      method: 'DELETE',
+    });
+    if (!response.ok) {
+      const err = await response.json().catch(() => null);
+      throw new Error(err?.error || 'Failed to delete order');
+    }
+  };
+
+  const handleStatusUpdate = async (orderId: number, newStatus: string) => {
+    const updated = await updateOrderStatusRemote(orderId, newStatus);
+    setLocalOrders((prev) =>
+      prev.map((order) => (order.id === orderId ? updated : order)),
+    );
+  };
+
+  const handleDelete = async (orderId: number) => {
+    await deleteOrderRemote(orderId);
+    setLocalOrders((prev) => prev.filter((order) => order.id !== orderId));
+  };
   return (
     <div>
       <div className="flex flex-wrap gap-y-2 justify-between items-center mb-6">
         <h2 className="text-2xl font-bold text-gray-800 mr-2">Orders</h2>
         <div className="flex gap-2 flex-wrap">
-          {['ALL', 'PENDING', 'PREPARING', 'READY'].map((status) => (
+          {[
+            'PENDING',
+            'PREPARING',
+            'READY',
+            'DELIVERED',
+            'CANCELLED',
+            'ALL',
+          ].map((status) => (
             <button
               key={status}
               onClick={() => setFilter(status as any)}
               className={`px-4 py-2 rounded-lg font-semibold transition ${
                 filter === status
                   ? 'bg-orange-600 text-white'
-                  : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                  : status === 'ALL'
+                    ? 'bg-gray-200 text-gray-700 hover:bg-gray-300 border-2 border-orange-300'
+                    : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
               }`}
             >
               {status.charAt(0).toUpperCase() + status.slice(1)}
@@ -67,8 +120,8 @@ export default function OrdersList({ ordersFromDB }: any) {
             <OrderCard
               key={order.id}
               order={order}
-              updateOrderStatus={updateOrderStatus}
-              deleteOrder={deleteOrder}
+              updateOrderStatus={handleStatusUpdate}
+              deleteOrder={handleDelete}
             />
           ))}
         </div>
