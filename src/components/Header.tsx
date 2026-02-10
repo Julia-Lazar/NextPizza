@@ -92,6 +92,14 @@ export const Header = ({ session }: { session?: Session | null }) => {
             >
               Contact
             </a>
+            {session?.user && (
+              <a
+                href="/orders"
+                className="text-gray-700 hover:text-orange-600 font-semibold transition-colors text-sm lg:text-base"
+              >
+                My Orders
+              </a>
+            )}
             {session?.user ? (
               <a
                 href="/#signout"
@@ -205,16 +213,25 @@ export const Header = ({ session }: { session?: Session | null }) => {
                 </a>
               </>
             ) : (
-              <a
-                href="/#signup"
-                onClick={() => {
-                  setIsMenuOpen(false);
-                  logout();
-                }}
-                className="text-gray-700 hover:text-orange-600 font-semibold transition-colors py-2"
-              >
-                Sign Out <div>{session?.user?.name}</div>
-              </a>
+              <>
+                <a
+                  href="/orders"
+                  onClick={() => setIsMenuOpen(false)}
+                  className="text-gray-700 hover:text-orange-600 font-semibold transition-colors py-2"
+                >
+                  My Orders
+                </a>
+                <a
+                  href="/#signup"
+                  onClick={() => {
+                    setIsMenuOpen(false);
+                    logout();
+                  }}
+                  className="text-gray-700 hover:text-orange-600 font-semibold transition-colors py-2"
+                >
+                  Sign Out <div>{session?.user?.name}</div>
+                </a>
+              </>
             )}
           </nav>
         )}

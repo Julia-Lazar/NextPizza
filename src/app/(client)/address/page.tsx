@@ -42,12 +42,24 @@ const addressSchema = z.object({
     .trim()
     .min(3, 'Postal code is too short')
     .regex(/^[0-9A-Z\s-]+$/, 'Please enter a valid postal code'),
-  country: z
-    .string()
-    .trim()
-    .min(2, 'Country name must be at least 2 characters'),
+  // country: z
+  //   .string()
+  //   .trim()
+  //   .min(2, 'Country name must be at least 2 characters'),
   additionalInfo: z.string().trim().optional(),
 });
+
+const initialFormData = {
+  firstName: '',
+  lastName: '',
+  email: '',
+  phone: '',
+  street: '',
+  city: '',
+  postalCode: '',
+  // country: '',
+  additionalInfo: '',
+};
 
 interface FormErrors {
   firstName?: string;
@@ -57,24 +69,14 @@ interface FormErrors {
   street?: string;
   city?: string;
   postalCode?: string;
-  country?: string;
+  // country?: string;
 }
 
 export default function AddressPage() {
   const router = useRouter();
   const { setAddressData } = useAddress();
   const storageKey = 'nextpizza.address.form';
-  const [formData, setFormData] = useState({
-    firstName: '',
-    lastName: '',
-    email: '',
-    phone: '',
-    street: '',
-    city: '',
-    postalCode: '',
-    country: '',
-    additionalInfo: '',
-  });
+  const [formData, setFormData] = useState(initialFormData);
 
   const [errors, setErrors] = useState<FormErrors>({});
   const [touched, setTouched] = useState<{ [key: string]: boolean }>({});
@@ -87,10 +89,15 @@ export default function AddressPage() {
       if (stored) {
         const parsed = JSON.parse(stored);
         if (parsed && typeof parsed === 'object') {
-          setFormData((prev) => ({
-            ...prev,
-            ...parsed,
-          }));
+          const next = { ...initialFormData };
+          (Object.keys(initialFormData) as Array<keyof typeof initialFormData>)
+            .forEach((key) => {
+              const value = (parsed as Record<string, unknown>)[key];
+              if (typeof value === 'string') {
+                next[key] = value;
+              }
+            });
+          setFormData(next);
         }
       }
     } catch {
@@ -111,6 +118,7 @@ export default function AddressPage() {
   }, [formData, hasLoadedFromStorage, storageKey]);
 
   const validateField = (name: string, value: string): string | undefined => {
+    if (!(name in addressSchema.shape)) return undefined;
     const partialData = { [name]: value };
     const partialSchema = addressSchema.pick({ [name]: true });
     const result = partialSchema.safeParse(partialData);

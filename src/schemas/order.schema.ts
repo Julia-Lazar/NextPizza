@@ -30,7 +30,7 @@ export const addressSchema = z.object({
   street: z.string().min(1).openapi({ example: '123 Main St' }),
   city: z.string().min(1).openapi({ example: 'Springfield' }),
   postalCode: z.string().min(1).openapi({ example: '12345' }),
-  country: z.string().min(1).openapi({ example: 'Poland' }),
+  // country: z.string().min(1).openapi({ example: 'Poland' }),
 });
 
 export const createOrderSchema = z.object({
@@ -63,7 +63,7 @@ export const createOrderSchema = z.object({
       street: '123 Main St',
       city: 'Springfield',
       postalCode: '12345',
-      country: 'Poland',
+      // country: 'Poland',
     },
   }),
 });

@@ -27,7 +27,7 @@ model Address {
   street     String
   city       String
   postalCode String
-  country    String
+  // country    String?  @default("Poland")
   userId     String? @unique
   user       User?   @relation(fields: [userId], references: [id], onDelete: Cascade)
   orders     Order[]

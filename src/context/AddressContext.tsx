@@ -1,5 +1,5 @@
-"use client";
-import React, { createContext, useContext, useState, ReactNode } from "react";
+'use client';
+import React, { createContext, useContext, useState, ReactNode } from 'react';
 
 export interface AddressData {
   firstName: string;
@@ -9,7 +9,7 @@ export interface AddressData {
   street: string;
   city: string;
   postalCode: string;
-  country: string;
+  // country: string;
   additionalInfo: string;
 }
 
@@ -33,7 +33,7 @@ export const AddressProvider = ({ children }: { children: ReactNode }) => {
 export const useAddress = () => {
   const context = useContext(AddressContext);
   if (!context) {
-    throw new Error("useAddress must be used within an AddressProvider");
+    throw new Error('useAddress must be used within an AddressProvider');
   }
   return context;
 };

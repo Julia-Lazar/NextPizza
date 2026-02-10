@@ -27,7 +27,7 @@ export async function GET(
       return Response.json({ error: idCheck.error.issues }, { status: 400 });
     }
     const product = await prisma.product.findUnique({
-      where: { id: Number(id) },
+      where: { id: String(id) },
       include: {
         productIngredient: { include: { ingredient: true } },
         productSize: true,
@@ -89,7 +89,7 @@ export async function PUT(
     }
 
     const updatedProduct = await prisma.product.update({
-      where: { id: Number(id) },
+      where: { id: String(id) },
       data: updateData,
       include: {
         productIngredient: { include: { ingredient: true } },
@@ -119,7 +119,7 @@ export async function DELETE(
       return Response.json({ error: `Invalid product ID: ${id}` }, { status: 400 });
     }
 
-    const productId = Number(id);
+    const productId = String(id);
 
     await prisma.productIngredient.deleteMany({ where: { productId } });
     await prisma.productSize.deleteMany({ where: { productId } });

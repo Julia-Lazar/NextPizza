@@ -51,16 +51,16 @@ export const productSchema = z.object({
 });
 
 export const productUpdateSchema = productSchema.partial().extend({
-  id: z.number().optional().openapi({
+  id: z.string().optional().openapi({
     description: "The product ID",
-    example: 11,
+    example: "clx1234567890",
   }),
 });
 
 export const idParamSchema = z.object({
-  id: z.string().regex(/^\d+$/).openapi({
+  id: z.string().min(1).openapi({
     description: "The product ID parameter in the URL",
-    example: 20,
+    example: "clx1234567890",
   }),
 });
 

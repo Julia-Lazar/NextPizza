@@ -64,7 +64,7 @@ export default function CheckoutPage() {
           street: addressData.street,
           city: addressData.city,
           postalCode: addressData.postalCode,
-          country: addressData.country,
+          // country: addressData.country,
         },
         // Optionally add userId if you have it: userId: "..."
       }),
@@ -181,9 +181,9 @@ export default function CheckoutPage() {
                   <p className="text-base sm:text-lg text-gray-800">
                     {addressData?.city}, {addressData?.postalCode}
                   </p>
-                  <p className="text-base sm:text-lg text-gray-800">
+                  {/* <p className="text-base sm:text-lg text-gray-800">
                     {addressData?.country}
-                  </p>
+                  </p> */}
                 </div>
                 {addressData?.additionalInfo && (
                   <div>

@@ -43,7 +43,7 @@ export async function POST(request: Request) {
       street: validatedData.address.street,
       city: validatedData.address.city,
       postalCode: validatedData.address.postalCode,
-      country: validatedData.address.country,
+      // country: validatedData.address.country,
     };
     if (validatedData.userId) {
       addressData.user = { connect: { id: validatedData.userId } };
@@ -68,7 +68,7 @@ export async function POST(request: Request) {
 
         if (!productSize) {
           throw new Error(
-            `Product size not found for productId: ${item.productId}, size: ${item.size}`
+            `Product size not found for productId: ${item.productId}, size: ${item.size}`,
           );
         }
 
@@ -115,6 +115,16 @@ export async function POST(request: Request) {
       return NextResponse.json(
         { error: 'Validation failed', details: error.issues },
         { status: 400 },
+      );
+    }
+
+    if (error instanceof Error) {
+      const isKnown =
+        error.message.startsWith('Product size not found') ||
+        error.message.startsWith('Invalid `prisma.address.create`');
+      return NextResponse.json(
+        { error: error.message },
+        { status: isKnown ? 400 : 500 },
       );
     }
 
