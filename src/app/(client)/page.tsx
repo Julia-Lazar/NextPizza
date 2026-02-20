@@ -14,7 +14,7 @@ export type Product = {
   name: string;
   imageUrl: string;
   category: string;
-  productIngredient?: { Ingredient: { name: string } }[];
+  productIngredient?: { ingredient: { name: string } }[];
   productSize?: { sizeName: string; price: number }[];
 };
 

@@ -25,7 +25,6 @@
     "@prisma/extension-accelerate": "^3.0.1",
     "@testing-library/user-event": "^14.6.1",
     "dotenv": "^17.2.3",
-    "fs": "^0.0.1-security",
     "mysql": "^2.18.1",
     "next": "16.0.7",
     "next-auth": "^5.0.0-beta.30",

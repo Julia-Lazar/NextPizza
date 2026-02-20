@@ -1,4 +1,4 @@
-import { render, screen } from "@testing-library/react";
+import { fireEvent, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import IngredientForm, { IngredientFormProps } from "./IngredientForm";
 import { useState } from "react";
@@ -63,60 +63,66 @@ describe("IngredientForm", () => {
   // });
 
   it("shows error for too long name", async () => {
+    const user = userEvent.setup();
     render(<IngredientFormWrapper />);
     const input = screen.getByPlaceholderText(/ingredient name/i);
-    await userEvent.type(input, "A".repeat(101));
-    await userEvent.click(screen.getByRole("button", { name: /add/i }));
+    fireEvent.change(input, { target: { value: "A".repeat(101) } });
+    await user.click(screen.getByRole("button", { name: /add/i }));
     expect(
       await screen.findByText(/cannot exceed 100 characters/i)
     ).toBeInTheDocument();
   });
 
   it("shows error for invalid characters", async () => {
+    const user = userEvent.setup();
     render(<IngredientFormWrapper />);
     const input = screen.getByPlaceholderText(/ingredient name/i);
-    await userEvent.type(input, "Tom@to!");
-    await userEvent.click(screen.getByRole("button", { name: /add/i }));
+    await user.type(input, "Tom@to!");
+    await user.click(screen.getByRole("button", { name: /add/i }));
     expect(
       await screen.findByText(/contains invalid characters/i)
     ).toBeInTheDocument();
   });
 
   it("shows error for numeric-only name", async () => {
+    const user = userEvent.setup();
     render(<IngredientFormWrapper />);
     const input = screen.getByPlaceholderText(/ingredient name/i);
-    await userEvent.type(input, "12345");
-    await userEvent.click(screen.getByRole("button", { name: /add/i }));
+    fireEvent.change(input, { target: { value: "12345" } });
+    await user.click(screen.getByRole("button", { name: /add/i }));
     expect(
       await screen.findByText(/cannot be numeric only/i)
     ).toBeInTheDocument();
   });
 
   it("adds ingredient and clears input", async () => {
+    const user = userEvent.setup();
     render(<IngredientFormWrapper />);
     const input = screen.getByPlaceholderText(/ingredient name/i);
-    await userEvent.type(input, "Tomato");
-    await userEvent.click(screen.getByRole("button", { name: /add/i }));
+    await user.type(input, "Tomato");
+    await user.click(screen.getByRole("button", { name: /add/i }));
     expect(await screen.findByText(/ingredient added/i)).toBeInTheDocument();
     expect(input).toHaveValue("");
     expect(screen.getByText(/tomato/i)).toBeInTheDocument();
   });
 
   it("shows error for duplicate ingredient", async () => {
+    const user = userEvent.setup();
     render(<IngredientFormWrapper />);
     const input = screen.getByPlaceholderText(/ingredient name/i);
-    await userEvent.type(input, "Tomato");
-    await userEvent.click(screen.getByRole("button", { name: /add/i }));
-    await userEvent.type(input, "Tomato");
-    await userEvent.click(screen.getByRole("button", { name: /add/i }));
+    await user.type(input, "Tomato");
+    await user.click(screen.getByRole("button", { name: /add/i }));
+    await user.type(input, "Tomato");
+    await user.click(screen.getByRole("button", { name: /add/i }));
     expect(await screen.findByText(/already exists/i)).toBeInTheDocument();
   });
 
   it("trims and lowercases input before adding", async () => {
+    const user = userEvent.setup();
     render(<IngredientFormWrapper />);
     const input = screen.getByPlaceholderText(/ingredient name/i);
-    await userEvent.type(input, "  PeaCh  ");
-    await userEvent.click(screen.getByRole("button", { name: /add/i }));
+    await user.type(input, "  PeaCh  ");
+    await user.click(screen.getByRole("button", { name: /add/i }));
     expect(screen.getByText(/peach/i)).toBeInTheDocument();
   });
 });

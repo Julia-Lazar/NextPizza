@@ -7,7 +7,9 @@ const updateStatusSchema = z.object({
   status: z.enum(['PENDING', 'PREPARING', 'READY', 'DELIVERED', 'CANCELLED']),
 });
 
-export async function GET(request: Request, context: any) {
+type ParamsContext = { params: Promise<{ id: string }> };
+
+export async function GET(request: Request, context: ParamsContext) {
   const { id } = await context.params;
   try {
     console.log('Order ID:', id); // Debug log
@@ -35,15 +37,16 @@ export async function GET(request: Request, context: any) {
 // POST is not typical for a single resource, but here is a placeholder
 export async function POST(
   request: Request,
-  context: { params: { id: string } },
+  context: ParamsContext,
 ) {
+  await context.params;
   return NextResponse.json(
     { error: 'POST not supported on this endpoint' },
     { status: 405 },
   );
 }
 
-export async function PUT(request: Request, context: any) {
+export async function PUT(request: Request, context: ParamsContext) {
   const { id } = await context.params;
   console.log('PUT order id:', id);
   try {
@@ -85,7 +88,7 @@ export async function PUT(request: Request, context: any) {
   }
 }
 
-export async function DELETE(request: Request, context: any) {
+export async function DELETE(request: Request, context: ParamsContext) {
   const { id } = await context.params;
   console.log('DELETE order id:', id);
   try {

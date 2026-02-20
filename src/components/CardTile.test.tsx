@@ -7,7 +7,7 @@ describe("CardTile Component", () => {
   it("renders the component with required props", () => {
     render(
       <CartProvider>
-        <CardTile name="Test Product" imageUrl="/test-image.jpg" />
+        <CardTile id="test-product-1" name="Test Product" imageUrl="/test-image.jpg" />
       </CartProvider>
     );
     const nameElement = screen.getByText("Test Product");
@@ -18,7 +18,7 @@ describe("CardTile Component", () => {
   it("displays fallback image on invalid image URL", () => {
     render(
       <CartProvider>
-        <CardTile name="Test Product" imageUrl="invalid-url" />
+        <CardTile id="test-product-2" name="Test Product" imageUrl="invalid-url" />
       </CartProvider>
     );
     const imgElement = screen.getByAltText("Test Product") as HTMLImageElement;
@@ -42,6 +42,7 @@ describe("CardTile Component", () => {
     render(
       <CartProvider>
         <CardTile
+          id="test-product-3"
           name="Test Product"
           imageUrl="/test-image.jpg"
           sizes={sizes}
@@ -72,6 +73,7 @@ describe("CardTile Component", () => {
     render(
       <CartProvider>
         <CardTile
+          id="test-product-4"
           name="Test Product"
           imageUrl="/test-image.jpg"
           sizes={sizes}
@@ -100,6 +102,7 @@ describe("CardTile Component", () => {
     render(
       <CartProvider>
         <CardTile
+          id="test-product-5"
           name="Test Product"
           imageUrl="/test-image.jpg"
           sizes={sizes}

@@ -30,22 +30,25 @@ const CartWithItemsWrapper = () => {
   React.useEffect(() => {
     // Add items to cart
     addToCart({
+      id: "story-item-1",
       name: "Margherita Pizza",
-      size: 30,
+      sizeName: "30 cm",
       price: 20,
-      image: "/images/margherita.jpg",
+      imageUrl: "/images/margherita.jpg",
     });
     addToCart({
+      id: "story-item-2",
       name: "Pepperoni Pizza",
-      size: 40,
+      sizeName: "40 cm",
       price: 25,
-      image: "/images/pepperoni.jpg",
+      imageUrl: "/images/pepperoni.jpg",
     });
     addToCart({
+      id: "story-item-3",
       name: "Hawaiian Pizza",
-      size: 30,
+      sizeName: "30 cm",
       price: 26,
-      image: "/images/hawaii.jpg",
+      imageUrl: "/images/hawaii.jpg",
     });
     // Open cart automatically
     setTimeout(() => {
